@@ -6,11 +6,11 @@ let usuarioSchema = new Schema({
     nombre:{
         type:String,
         required:[true, 'Campo nombre requerido'],
-        unique:true
     },
     email:{
         type:String,
         required:[true, 'Campo email requerido'],
+        unique:true,
     },
     password:{
         type:String,
