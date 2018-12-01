@@ -3,6 +3,7 @@ const _ = require('lodash')
 const bcrypt = require('bcryptjs');
 const { ObjectID } = require('mongodb')
 let Usuario = require('../models/usuario')
+let mdAntenticacion = require('../middlewares/autenticacion')
 
 let app = express()
 
@@ -19,12 +20,12 @@ app.get('/', (req, res) => {
 })
 
 //POST 
-app.post('/', (req, res) => {
+app.post('/', mdAntenticacion.verificaToken, (req, res) => {
     let body = _.pick(req.body,['nombre', 'email', 'password', 'img', 'role'])
     let usuario = new Usuario({nombre:body.nombre, email:body.email, password: bcrypt.hashSync( body.password, 10), img:body.img, role:body.role})
 
     usuario.save().then( ( usuario ) => {
-        res.send(usuario)
+        res.status(201).json({OK:true, usuario:usuario, usuariotoken: req.usuario})
     }).catch( (err) => {
         res.send(err)
     })
@@ -35,7 +36,7 @@ app.get('/:id', (req, res) => {
 
 })
 
-app.put('/:id', (req, res) => {
+app.put('/:id',mdAntenticacion.verificaToken, (req, res) => {
 
     let id = req.params.id
     let body = req.body
@@ -77,7 +78,7 @@ app.put('/:id', (req, res) => {
 })
 
 //DELETE
-app.delete('/:id', (req, res) => {
+app.delete('/:id', mdAntenticacion.verificaToken, (req, res) => {
     let id = req.params.id
     Usuario.findByIdAndRemove(id).then((respuesta) => {
         res.status(200).json({OK:true, usuario:respuesta})
