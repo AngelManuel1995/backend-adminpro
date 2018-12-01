@@ -1,8 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const Usuario = require('./models/usuario')
-
+const bodyParser = require('body-parser')
 let app = express()
+
+app.use(bodyParser.json())
 
 mongoose.connection.openUri('mongodb://localhost:27017/hospitalesDB', (err, res) => {
     if(err) throw err
@@ -12,8 +14,10 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalesDB', (err, res)
 
 //RUTAS
 let usuarioRoutes = require('./routes/usuario')
+let loginRoutes = require('./routes/login')
 
 app.use('/usuario', usuarioRoutes)
+app.use('/login', loginRoutes)
 
 app.get('/', (req, res)=> {
     res.status(200).json({estado:'OK'})
