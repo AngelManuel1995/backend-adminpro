@@ -15,9 +15,13 @@ mongoose.connection.openUri('mongodb://localhost:27017/hospitalesDB', (err, res)
 //RUTAS
 let usuarioRoutes = require('./routes/usuario')
 let loginRoutes = require('./routes/login')
+let hospitalRoutes = require('./routes/hospital')
+let medicoRoutes = require('./routes/medico')
 
 app.use('/usuario', usuarioRoutes)
 app.use('/login', loginRoutes)
+app.use('/hospital', hospitalRoutes)
+app.use('/medico', medicoRoutes)
 
 app.get('/', (req, res)=> {
     res.status(200).json({estado:'OK'})
